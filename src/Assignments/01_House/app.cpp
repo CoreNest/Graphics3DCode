@@ -50,7 +50,6 @@ void SimpleShapeApplication::init()
         0.5f,
         -0.5f,
         0.0f,
-
     };
 
     /*
