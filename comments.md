@@ -9,3 +9,4 @@ Ale proszę nie używać żadnych animacji.
 
 13.10.2025 11:17:28
 Proszę nie używać żadnych animacji. 
+I proszę zacząć powli usuwać moje komentarze. 
