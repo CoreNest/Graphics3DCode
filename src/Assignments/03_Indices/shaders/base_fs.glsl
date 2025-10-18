@@ -7,5 +7,5 @@ uniform float iTime;
 
 void main(){
     
-    vFragColor=vec4(vertexColor*(sin(iTime)*.5+.5),1.);
+    vFragColor=vec4(vertexColor,1.);
 }
