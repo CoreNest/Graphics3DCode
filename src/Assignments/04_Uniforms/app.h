@@ -27,5 +27,5 @@ private:
 
     GLuint vao_;
     GLuint vao_block_;
-    GLuint ubo;
+    GLuint ubo, ubo_trans;
 };

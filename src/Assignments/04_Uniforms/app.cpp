@@ -11,6 +11,7 @@
 #include "glad/gl.h"
 
 #include "Application/utils.h"
+#include "transformation.h"
 
 GLuint program = 0;
 
@@ -47,6 +48,10 @@ void SimpleShapeApplication::init()
     glNamedBufferData(ubo, 8 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo);
 
+    glCreateBuffers(1, &ubo_trans);
+    glNamedBufferData(ubo_trans, 12 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 1, ubo_trans);
+
     GLuint v_buffer_handle, v_index_buffer_handle;
     OGL_CALL(glCreateBuffers(1, &v_buffer_handle));
     OGL_CALL(glCreateBuffers(1, &v_index_buffer_handle));
@@ -81,10 +86,18 @@ void SimpleShapeApplication::frame()
 {
     float time = glfwGetTime() - startTime;
     glUniform1f(glGetUniformLocation(program, "iTime"), time);
-    float ubo_data[8] = {
-        strength, 0.0f, 0.0f, 0.0f,                      // 4 floats: strength + padding
-        mix_color[0], mix_color[1], mix_color[2], 0.0f}; // 4 floats: color + padding};
-    OGL_CALL(glNamedBufferSubData(ubo, 0, sizeof(ubo_data), ubo_data));
+    {
+        float ubo_data[8] = {
+            strength, 0.0f, 0.0f, 0.0f,                      // 4 floats: strength + padding
+            mix_color[0], mix_color[1], mix_color[2], 0.0f}; // 4 floats: color + padding};
+
+        OGL_CALL(glNamedBufferSubData(ubo, 0, sizeof(ubo_data), ubo_data));
+    }
+    {
+        auto ubo_data = trans.get_data();
+
+        OGL_CALL(glNamedBufferSubData(ubo_trans, 0, ubo_data.size() * sizeof(float), ubo_data.data()));
+    }
 
     OGL_CALL(glBindVertexArray(vao_));
     glDrawElementsBaseVertex(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0, 0);

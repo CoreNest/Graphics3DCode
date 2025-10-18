@@ -5,7 +5,14 @@ layout(location=1)in vec3 aColor;// r, g, b
 
 out vec3 vertexColor;
 
+layout(std140,binding=1)uniform Transformations{
+    vec2 scale;
+    vec2 translation;
+    mat2 rotation;
+};
+
 void main(){
-    gl_Position=a_vertex_position;
+    gl_Position.xy=rotation*(scale*a_vertex_position.xy)+translation;
+    gl_Position.zw=a_vertex_position.zw;
     vertexColor=aColor;
 }
