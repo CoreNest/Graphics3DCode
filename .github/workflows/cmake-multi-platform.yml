@@ -1,0 +1,50 @@
+name: OpenGL Test and Screenshot
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  opengl-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            mesa-utils \
+            freeglut3-dev \
+            xvfb \
+            imagemagick
+
+      - name: Build OpenGL app
+        run: |
+          mkdir build && cd build
+          cmake ..
+          make -j$(nproc)
+
+      - name: Run OpenGL app with Xvfb and capture screenshot
+        run: |
+          # Start a virtual X server
+          Xvfb :99 -screen 0 800x600x24 &
+          export DISPLAY=:99
+          sleep 2
+
+          # Run your OpenGL app (headless)
+          ./build/my_opengl_app &
+
+          # Give it time to render
+          sleep 3
+
+          # Capture the framebuffer
+          import -window root screenshot.png
+
+      - name: Upload screenshot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: opengl-screenshot
+          path: screenshot.png
