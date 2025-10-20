@@ -23,7 +23,11 @@ jobs:
           libwayland-dev \
           wayland-protocols \
           wayland-scanner++ \
-          libxkbcommon-dev
+          libx11-dev \
+          libxrandr-dev \
+          libxinerama-dev \
+          libxcursor-dev \
+          libxi-dev
 
       - name: Build OpenGL app
         run: |
