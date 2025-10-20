@@ -36,21 +36,34 @@ jobs:
           cmake ..
           make -j$(nproc)
 
-      - name: Run OpenGL app with Xvfb and capture screenshot
+      - name: Run all OpenGL targets with Xvfb and capture screenshots
         run: |
-          # Start a virtual X server
-          Xvfb :99 -screen 0 800x600x24 &
+          mkdir -p screenshots
+      
+          # Start virtual X server
+          Xvfb :99 -screen 0 1024x768x24 &
           export DISPLAY=:99
           sleep 2
+      
+          # Iterate over all executable files in build/
+          for exe in $(find build -maxdepth 1 -type f -executable); do
+              name=$(basename "$exe")
+              echo "Running $name..."
+              
+              # Run the app in background
+              "$exe" &
+              pid=$!
+              
+              # Wait for it to render
+              sleep 3
+              
+              # Capture screenshot
+              import -window root "screenshots/${name}.png"
+              
+              # Stop the app
+              kill $pid || true
+          done
 
-          # Run your OpenGL app (headless)
-          ./build/my_opengl_app &
-
-          # Give it time to render
-          sleep 3
-
-          # Capture the framebuffer
-          import -window root screenshot.png
 
       - name: Upload screenshot artifact
         uses: actions/upload-artifact@v4
