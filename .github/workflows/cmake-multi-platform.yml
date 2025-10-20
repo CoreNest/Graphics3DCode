@@ -16,10 +16,14 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y \
-            mesa-utils \
-            freeglut3-dev \
-            xvfb \
-            imagemagick
+          mesa-utils \
+          freeglut3-dev \
+          xvfb \
+          imagemagick \
+          libwayland-dev \
+          wayland-protocols \
+          wayland-scanner++ \
+          libxkbcommon-dev
 
       - name: Build OpenGL app
         run: |
