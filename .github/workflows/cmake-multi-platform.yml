@@ -59,7 +59,9 @@ jobs:
               sleep 3
               
               # Capture screenshot
-              import -window root "screenshots/${name}.png"
+              xwd -root -silent -out "screenshots/${name}.xwd"
+              convert "screenshots/${name}.xwd" "screenshots/${name}.png"
+              rm "screenshots/${name}.xwd"
               
               # Stop the app
               kill $pid || true
