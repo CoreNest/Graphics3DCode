@@ -46,8 +46,9 @@ jobs:
           sleep 2
       
           # Iterate over all executable files in build/
-          for exe in $(find build -maxdepth 1 -type f -executable); do
+          find build/src/Assignments -type f -executable | while read exe; do
               name=$(basename "$exe")
+              echo "Running $name..."
               echo "Running $name..."
               
               # Run the app in background
